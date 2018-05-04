@@ -11,25 +11,31 @@ import UIKit
 class ViewController: UIViewController {
     private var brain: CalculatorBrain = CalculatorBrain()
     @IBOutlet weak var display: UILabel!
+    @IBOutlet weak var descriptionLabel: UILabel!
     var userIsTyping = false
     var enteringFloat = false
+
+    @IBAction func touchClear(_ sender: UIButton) {
+        display.text = "0"
+        userIsTyping = false
+        enteringFloat = false
+        if (brain.description != nil) {
+            brain.description = " "
+        }
+        descriptionLabel.text = " "
+    }
     
     @IBAction func touchDigit(_ sender: UIButton) {
         let digit = sender.currentTitle!
-        print("\(digit) was touched")
+       // print("\(digit) was touched")
         
-        
-        if (digit == "." && enteringFloat){
-            return
+        if (digit == ".") {
+            if (enteringFloat){
+                return
+            } else {
+                enteringFloat = true
+            }
         }
-        
-        if (digit == "C"){
-            display.text = "0"
-            userIsTyping = false
-            enteringFloat = false
-            return
-        }
-        
         
         if userIsTyping {
             let textCurrentlyInDisplay = display!.text!
@@ -37,9 +43,6 @@ class ViewController: UIViewController {
         } else {
             display.text = digit
             userIsTyping = true
-        }
-        if (digit == ".") {
-            enteringFloat = true
         }
     }
     
@@ -52,6 +55,18 @@ class ViewController: UIViewController {
         }
     }
     
+    // updates the UILabel based on the brain's description
+    func updateDescriptionLabel() {
+        if let description = brain.description{
+            if (brain.resultIsPending) {
+                descriptionLabel.text = description + "..."
+            } else {
+                descriptionLabel.text = description +  "= "
+            }
+        }
+    }
+    
+    
     @IBAction func performOperation(_ sender: UIButton) {
         if userIsTyping {
             brain.setOperand(displayValue)
@@ -63,6 +78,7 @@ class ViewController: UIViewController {
         if let result = brain.result {
             displayValue = result
         }
+        updateDescriptionLabel()
     }
 }
 
