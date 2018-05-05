@@ -19,3 +19,10 @@ May 4th, 2018:
     
     - To Do -> Change description label to more elegantly handle unary funcs (5/11 example outputs in part 7 of a1 currently yet to work)
     
+
+May 5th, 2018:
+
+    - Finished req 7 by adding a check to see if the user is initiating a brand new binary, and clears the description display
+    
+    - Also changed the switch operation so that if a unaryOperation is occuring, the description label is specifically changed by calling editDescriptionOnUnary(), which calls either describeUnaryWithPending() or edits the description in line by itself as appropriate
+    

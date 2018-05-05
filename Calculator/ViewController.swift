@@ -69,6 +69,10 @@ class ViewController: UIViewController {
     
     @IBAction func performOperation(_ sender: UIButton) {
         if userIsTyping {
+            // testing last UILabel req
+            if (brain.description != nil && isBinary(operation: sender.currentTitle!)) {
+                brain.description = " "
+            }
             brain.setOperand(displayValue)
             userIsTyping = false
         }
@@ -79,6 +83,10 @@ class ViewController: UIViewController {
             displayValue = result
         }
         updateDescriptionLabel()
+    }
+    
+    private func isBinary(operation: String) -> Bool {
+        return operation == "+" || operation == "x" || operation == "÷" || operation == "-"
     }
 }
 

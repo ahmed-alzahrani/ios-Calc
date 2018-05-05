@@ -25,11 +25,44 @@ struct CalculatorBrain {
         description! += " "
     }
     
+    mutating func editDescriptionOnUnary(symbolToAdd: String){
+        if (description != nil) {
+            if (resultIsPending) {
+                description! = describeUnaryWithPending(symbolToAdd: symbolToAdd)
+                
+            } else {
+                description! = symbolToAdd + "( " + description! + " )"
+            }
+        }
+    }
+    
     func getDescription() -> String{
         if let describe = description{
             return describe
         }
         return " "
+    }
+    
+    private func describeUnaryWithPending(symbolToAdd: String) -> String{
+        var count = 0
+        var sinceLastSymbol = 0
+        for character in description! {
+            if (characterCheck(char: character)){
+                sinceLastSymbol += 1
+                continue
+            } else {
+                count += sinceLastSymbol
+                sinceLastSymbol = 0
+            }
+        }
+        let splitIndex = description!.index(description!.startIndex, offsetBy: count)
+        let substring1 = description![..<splitIndex]
+        let substring2 = description![splitIndex...]
+        return substring1 + symbolToAdd + "(" + substring2 + ")"
+    }
+    
+    private func characterCheck(char: Character) -> Bool {
+        return ((char >= "0" && char <= "9") || char == "." || char == "∏" || char == "e")
     }
     
     
@@ -71,7 +104,7 @@ struct CalculatorBrain {
             case .unaryOperation(let function):
                 if accumulator != nil {
                     accumulator = function(accumulator!)
-                    editDescription(symbolToAdd: symbol)
+                    editDescriptionOnUnary(symbolToAdd: symbol)
                 }
             case .binaryOperation(let function):
                 if accumulator != nil {
